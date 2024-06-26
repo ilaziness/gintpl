@@ -1,4 +1,4 @@
-## <center>Fish</center>
+## <center>GinTpl</center>
 
 基于Gin框架的快速开发脚手架
 
