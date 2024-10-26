@@ -4,14 +4,17 @@
 //
 // Author: ilaziness  https://github.com/ilaziness
 
-package middleware
+package route
 
 import (
+	"gintpl/internal/app/web/handler"
+	"gintpl/internal/app/web/handler/user"
+
 	"github.com/gin-gonic/gin"
 )
 
-func Response(c *gin.Context) {
-	//fmt.Println("respsppp")
-	//g.Logger.Info("resp")
-	//c.Next()
+func InitRoute(e *gin.Engine) {
+	e.GET("/", handler.Index)
+	e.GET("/p", handler.Painc)
+	e.GET("/user/:id", user.Index)
 }

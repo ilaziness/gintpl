@@ -4,13 +4,13 @@
 //
 // Author: ilaziness  https://github.com/ilaziness
 
-// Package g provide global singleton object access
-package g
+// Package log provide global singleton object access
+package log
 
 import (
-	"fish/internal/bootstrap"
-	"go.uber.org/zap"
 	"log"
+
+	"go.uber.org/zap"
 )
 
 var (
@@ -18,10 +18,8 @@ var (
 	zapLogger *zap.Logger
 )
 
-func init() {
-	bootstrap.RegisterStartup(SetLogger)
-	bootstrap.RegisterDestructor(FlushLogger)
-	log.Println("register logger")
+func Init() {
+	SetLogger()
 }
 
 func SetLogger() {
@@ -35,9 +33,9 @@ func SetLogger() {
 }
 
 func FlushLogger() {
+	log.Println("zap logger sync")
 	err := zapLogger.Sync()
 	if err != nil {
-		log.Println("zap logger sync")
 		log.Println(err)
 	}
 }

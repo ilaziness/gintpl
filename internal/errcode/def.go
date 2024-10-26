@@ -6,13 +6,11 @@
 
 package errcode
 
-import (
-	"net/http"
-)
+import "gintpl/pkg/base/errcode"
 
 // 错误码定义
 
 var (
-	CodeNil      = NewCode(0, "ok", http.StatusOK)
-	CodeNotFound = NewCode(404, "Not Found", http.StatusOK)
+	CodeNil      = errcode.NewCode(0, "ok")
+	CodeNotFound = errcode.NewCode(404, "Not Found")
 )

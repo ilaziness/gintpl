@@ -1,2 +1,3 @@
 [app]
-id = "Fish"
+id = "GinTpl3"
+port = 9000

@@ -1,2 +1,7 @@
-[database]
-dsn = "e3w53e45"
+[db]
+dsn = "root:root@tcp(127.0.0.1:3306)/hotgo"
+
+[redis]
+host = "127.0.0.1"
+user = ""
+pass = ""
