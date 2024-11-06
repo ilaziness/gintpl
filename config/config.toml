@@ -1,3 +1,4 @@
 [app]
 id = "GinTpl3"
 port = 9000
+mode = ""

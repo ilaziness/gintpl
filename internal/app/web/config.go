@@ -5,9 +5,9 @@ import (
 	"gintpl/pkg/config"
 )
 
-var Config = &globalConfig{}
+var Config = &configType{}
 
-type globalConfig struct {
+type configType struct {
 	App   *config.App   `mapstructure:"app"`
 	Db    *config.DB    `mapstructure:"db"`
 	Redis *config.Redis `mapstructure:"redis"`

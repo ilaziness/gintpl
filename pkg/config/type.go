@@ -2,15 +2,10 @@ package config
 
 type Mode string
 
-const (
-	Dev  Mode = "dev"
-	Prod Mode = "prod"
-)
-
 type App struct {
 	ID string `mapstructure:"id"`
 	// Mode debug, release
-	Mode    Mode   `mapstructure:"mode"`
+	Mode    string `mapstructure:"mode"`
 	Port    uint16 `mapstructure:"port"`
 	RootDir string `mapstructure:"root_dir"`
 }

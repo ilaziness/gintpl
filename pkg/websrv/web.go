@@ -1,7 +1,9 @@
-package webapp
+// Package websrv provide web engine
+package websrv
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -10,6 +12,8 @@ import (
 
 	"gintpl/pkg/config"
 	"gintpl/pkg/log"
+	"gintpl/pkg/middleware"
+	"gintpl/pkg/timer"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,17 +22,28 @@ type App struct {
 	Gin *gin.Engine
 }
 
-func New(mode string) *App {
-	if mode == gin.ReleaseMode {
-		gin.SetMode(gin.ReleaseMode)
-	}
+// New 创建一个web app
+func New() *App {
 	return &App{
-		Gin: gin.Default(),
+		Gin: NewGin(),
 	}
+}
+
+// NewGin gin engine
+func NewGin() *gin.Engine {
+	e := gin.New()
+	e.ContextWithFallback = true
+	e.Use(middleware.LogReq(), gin.CustomRecoveryWithWriter(nil, middleware.RecoveryHandle))
+	return e
 }
 
 // Run 运行应用
 func (a *App) Run(appCfg *config.App) {
+	if appCfg.Mode == gin.ReleaseMode {
+		gin.SetMode(gin.ReleaseMode)
+	}
+	starup()
+
 	srv := http.Server{
 		Addr:    fmt.Sprintf(":%d", appCfg.Port),
 		Handler: a.Gin,
@@ -36,7 +51,7 @@ func (a *App) Run(appCfg *config.App) {
 	go func() {
 		log.Logger.Infof("app %s star on: %s", appCfg.ID, srv.Addr)
 		err := srv.ListenAndServe()
-		if err != nil {
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Logger.Fatal("Start Server error:", err)
 		}
 	}()
@@ -51,5 +66,15 @@ func (a *App) Run(appCfg *config.App) {
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Logger.Fatal("Server Shutdown error:", err)
 	}
+	stopup()
 	log.Logger.Info("Server exiting")
+}
+
+func starup() {
+	timer.Run()
+}
+
+func stopup() {
+	timer.Stop()
+	log.FlushLogger()
 }

@@ -1,3 +1,4 @@
+// Package config provide confg file read and unmarshal
 package config
 
 import (
@@ -11,34 +12,34 @@ import (
 	"github.com/spf13/viper"
 )
 
+// EnvConfigFile 配置文件环境变量名称
+const EnvConfigFile = "ENV_CONFIG_FILE"
+
 var (
-	Gf *viper.Viper
-
 	// 配置文件列表
-	files = make([]string, 0)
-	// 配置文件搜索路径
-	paths = []string{"config"}
-
-	mainFile = "config"
+	files       = make([]string, 0)
+	defaultFile = "config"
 	// 配置文件目录
-	configDir = "./config"
-	fileType  = "toml"
+	defaultDir  = "./config"
+	defaultType = "toml"
+	configFile  = ""
 )
 
 type WithFunc func()
 
 func scanFile() {
+	// 优先环境变量指定的配置文件
+	cfgFile := os.Getenv(EnvConfigFile)
+	if cfgFile != "" {
+		configFile = cfgFile
+		return
+	}
 	var err error
-	dirfs := os.DirFS(configDir)
-	files, err = fs.Glob(dirfs, fmt.Sprintf("*.%s", fileType))
+	dirfs := os.DirFS(defaultDir)
+	files, err = fs.Glob(dirfs, fmt.Sprintf("*.%s", defaultType))
 	if err != nil {
 		panic(err)
 	}
-}
-
-// AddPath 添加配置文件搜索路径
-func AddPath(path string) {
-	paths = append(paths, path)
 }
 
 // LoadConfig 读取解析配置文件
@@ -46,17 +47,21 @@ func LoadConfig[T any](c T) {
 	scanFile()
 
 	v := viper.New()
-	v.SetConfigName(mainFile)
-	v.AddConfigPath(configDir)
-	v.SetConfigType(fileType)
+	if configFile != "" {
+		v.SetConfigFile(configFile)
+	} else {
+		v.SetConfigName(defaultFile)
+		v.AddConfigPath(defaultDir)
+		v.SetConfigType(defaultType)
+	}
 	if err := v.ReadInConfig(); err != nil {
 		panic(err)
 	}
 	for _, file := range files {
-		if strings.HasSuffix(file, fmt.Sprintf("%s.%s", mainFile, fileType)) {
+		if strings.HasSuffix(file, fmt.Sprintf("%s.%s", defaultFile, defaultType)) {
 			continue
 		}
-		v.SetConfigFile(fmt.Sprintf("%s/%s", configDir, file))
+		v.SetConfigFile(fmt.Sprintf("%s/%s", defaultDir, file))
 		if err := v.MergeInConfig(); err != nil {
 			panic(err)
 		}
