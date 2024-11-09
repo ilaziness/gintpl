@@ -8,6 +8,14 @@ type App struct {
 	Mode    string `mapstructure:"mode"`
 	Port    uint16 `mapstructure:"port"`
 	RootDir string `mapstructure:"root_dir"`
+	Cors    *Cors  `mapstructure:"cors"`
+}
+
+type Cors struct {
+	AllowOrigin      []string `mapstructure:"allowOrigin"`
+	AllowMethods     []string `mapstructure:"allowMethods"`
+	AllowHeaders     []string `mapstructure:"allowHeaders"`
+	AllowCredentials bool     `mapstructure:"allowCredentials"`
 }
 
 type DB struct {

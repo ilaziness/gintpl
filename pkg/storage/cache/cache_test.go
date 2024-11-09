@@ -2,13 +2,32 @@ package cache
 
 import (
 	"context"
+	"encoding"
+	"encoding/json"
 	"gintpl/pkg/config"
 	"gintpl/pkg/storage/redis"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var cfg = &config.Redis{
 	Host: "127.0.0.1",
+}
+
+var _ encoding.BinaryMarshaler = &tests{}
+
+type tests struct {
+	Name string
+	Age  int
+}
+
+func (ts *tests) MarshalBinary() (data []byte, err error) {
+	return json.Marshal(ts)
+}
+
+func (ts *tests) UnmarshalBinary(data []byte) error {
+	return json.Unmarshal(data, &ts)
 }
 
 func init() {
@@ -52,4 +71,38 @@ func TestMain(t *testing.T) {
 		}
 	})
 
+}
+
+func TestCache(t *testing.T) {
+	ttl := 5
+	ctx := context.Background()
+
+	k1 := "k1"
+	v1 := "abcr"
+	err := Set(ctx, k1, v1, ttl)
+	assert.Equal(t, err, nil, "set return error")
+	var v1s string
+	GetScan(ctx, k1, &v1s)
+	assert.Equal(t, v1, v1s)
+
+	k2 := "k2"
+	v2 := 2
+	err = Set(ctx, k2, v2, ttl)
+	assert.Equal(t, err, nil, "set return error")
+	var v2s int
+	GetScan(ctx, k2, &v2s)
+	assert.Equal(t, v2, v2s)
+
+	k3 := "k3"
+	v3 := &tests{"namek3", 15}
+	assert.Equal(t, Set(ctx, k3, v3, ttl), nil, "set return error")
+	v3s := &tests{}
+	GetScan(ctx, k3, v3s)
+	assert.Equal(t, v3, v3s)
+
+	k4 := "k4"
+	v4 := "k4k4k4"
+	assert.Equal(t, v4, GetOrSet(ctx, k4, ttl, func() any {
+		return v4
+	}))
 }

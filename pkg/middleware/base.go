@@ -46,12 +46,6 @@ func trace(message string) string {
 		}
 		str.WriteString(fmt.Sprintf("\n\t%s:%d", frame.File, frame.Line))
 	}
-
-	for _, pc := range pcs[:n] {
-		fn := runtime.FuncForPC(pc)
-		file, line := fn.FileLine(pc)
-		str.WriteString(fmt.Sprintf("\n\t%s:%d", file, line))
-	}
 	return str.String()
 }
 
@@ -75,6 +69,6 @@ func LogReq() gin.HandlerFunc {
 		statusCode := c.Writer.Status()
 		errorMessage := c.Errors.ByType(gin.ErrorTypePrivate).String()
 
-		log.Logger.Infow(path, "latency", fmt.Sprintf("%v", latency), "client_ip", clientIP, "method", method, "status_code", statusCode, "query", raw, "error", errorMessage)
+		log.Logger.Infow(path, "latency", latency.String(), "client_ip", clientIP, "method", method, "status_code", statusCode, "query", raw, "error", errorMessage)
 	}
 }

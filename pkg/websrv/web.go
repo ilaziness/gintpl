@@ -15,17 +15,23 @@ import (
 	"gintpl/pkg/middleware"
 	"gintpl/pkg/timer"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 type App struct {
 	Gin *gin.Engine
+	cfg *config.App
 }
 
 // New 创建一个web app
-func New() *App {
+func New(appCfg *config.App) *App {
+	if appCfg.Mode == gin.ReleaseMode {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	return &App{
 		Gin: NewGin(),
+		cfg: appCfg,
 	}
 }
 
@@ -38,18 +44,14 @@ func NewGin() *gin.Engine {
 }
 
 // Run 运行应用
-func (a *App) Run(appCfg *config.App) {
-	if appCfg.Mode == gin.ReleaseMode {
-		gin.SetMode(gin.ReleaseMode)
-	}
-	starup()
-
+func (a *App) Run() {
+	a.starup()
 	srv := http.Server{
-		Addr:    fmt.Sprintf(":%d", appCfg.Port),
+		Addr:    fmt.Sprintf(":%d", a.cfg.Port),
 		Handler: a.Gin,
 	}
 	go func() {
-		log.Logger.Infof("app %s star on: %s", appCfg.ID, srv.Addr)
+		log.Logger.Infof("app [%s] started on %s", a.cfg.ID, srv.Addr)
 		err := srv.ListenAndServe()
 		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Logger.Fatal("Start Server error:", err)
@@ -66,15 +68,31 @@ func (a *App) Run(appCfg *config.App) {
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Logger.Fatal("Server Shutdown error:", err)
 	}
-	stopup()
+	a.stopup()
 	log.Logger.Info("Server exiting")
 }
 
-func starup() {
+func (a *App) starup() {
+	corsCfg := cors.DefaultConfig()
+	corsCfg.AllowOrigins = []string{"*"}
+	if a.cfg.Cors != nil {
+		if len(a.cfg.Cors.AllowOrigin) > 0 {
+			corsCfg.AllowOrigins = a.cfg.Cors.AllowOrigin
+		}
+		if len(a.cfg.Cors.AllowMethods) > 0 {
+			corsCfg.AllowMethods = a.cfg.Cors.AllowMethods
+		}
+		if len(a.cfg.Cors.AllowHeaders) > 0 {
+			corsCfg.AllowHeaders = a.cfg.Cors.AllowHeaders
+		}
+		corsCfg.AllowCredentials = a.cfg.Cors.AllowCredentials
+	}
+	a.Gin.Use(cors.New(corsCfg))
+
 	timer.Run()
 }
 
-func stopup() {
+func (a *App) stopup() {
 	timer.Stop()
 	log.FlushLogger()
 }

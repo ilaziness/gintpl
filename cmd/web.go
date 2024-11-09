@@ -3,6 +3,7 @@ package main
 import (
 	"gintpl/internal/app/web"
 	"gintpl/internal/app/web/route"
+	_ "gintpl/internal/timer"
 	"gintpl/pkg/log"
 	"gintpl/pkg/storage/cache"
 	"gintpl/pkg/storage/mysql"
@@ -21,23 +22,14 @@ var CmdWeb = &cobra.Command{
 	},
 }
 
-var port uint16
-
-func init() {
-	CmdWeb.PersistentFlags().Uint16VarP(&port, "port", "p", 8080, "port")
-}
-
 func run() {
-	app := websrv.New()
-	if web.Config.App.Port == 0 {
-		web.Config.App.Port = port
-	}
+	app := websrv.New(web.Config.App)
 	loadComponent()
 
 	// 初始化路由
 	route.InitRoute(app.Gin)
 	// 运行
-	app.Run(web.Config.App)
+	app.Run()
 }
 
 // loadComponent 初始化需要用到的组件

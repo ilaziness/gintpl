@@ -1,4 +1,4 @@
-// Package config 应用配置
+// Package web config 应用配置
 package web
 
 import (
