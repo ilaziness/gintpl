@@ -12,10 +12,10 @@ type App struct {
 }
 
 type Cors struct {
-	AllowOrigin      []string `mapstructure:"allowOrigin"`
-	AllowMethods     []string `mapstructure:"allowMethods"`
-	AllowHeaders     []string `mapstructure:"allowHeaders"`
-	AllowCredentials bool     `mapstructure:"allowCredentials"`
+	AllowOrigin      []string `mapstructure:"allow_origin"`
+	AllowMethods     []string `mapstructure:"allow_methods"`
+	AllowHeaders     []string `mapstructure:"allow_headers"`
+	AllowCredentials bool     `mapstructure:"allow_credentials"`
 }
 
 type DB struct {
@@ -24,7 +24,7 @@ type DB struct {
 	Port     uint16 `mapstructure:"Port"`
 	Username string `mapstructure:"username"`
 	Password string `mapstructure:"password"`
-	DbName   string `mapstructure:"dbName"`
+	DbName   string `mapstructure:"db_name"`
 	Charset  string `mapstructure:"charset"`
 	Timezone string `mapstructure:"timezone"`
 }
@@ -35,4 +35,12 @@ type Redis struct {
 	User string `mapstructure:"user"`
 	Pass string `mapstructure:"pass"`
 	Db   uint   `mapstructure:"db"`
+}
+
+type RocketMq struct {
+	Endpoint      string `mapstructure:"endpoint"`
+	AccessKey     string `mapstructure:"access_key"`
+	SecretKey     string `mapstructure:"secret_key"`
+	Transaction   bool   `mapstructure:"transaction"`
+	ProducerTopic string `mapstructure:"producer_topic"`
 }

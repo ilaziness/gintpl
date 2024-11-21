@@ -13,6 +13,7 @@ import (
 	"gintpl/pkg/config"
 	"gintpl/pkg/log"
 	"gintpl/pkg/middleware"
+	"gintpl/pkg/queue/rocketmq"
 	"gintpl/pkg/timer"
 
 	"github.com/gin-contrib/cors"
@@ -93,6 +94,8 @@ func (a *App) starup() {
 }
 
 func (a *App) stopup() {
-	timer.Stop()
 	log.FlushLogger()
+	timer.Stop()
+	rocketmq.ProducerStop()
+	rocketmq.ConsumerStop()
 }

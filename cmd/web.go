@@ -3,8 +3,10 @@ package main
 import (
 	"gintpl/internal/app/web"
 	"gintpl/internal/app/web/route"
+	_ "gintpl/internal/queue"
 	_ "gintpl/internal/timer"
 	"gintpl/pkg/log"
+	"gintpl/pkg/queue/rocketmq"
 	"gintpl/pkg/storage/cache"
 	"gintpl/pkg/storage/mysql"
 	"gintpl/pkg/storage/redis"
@@ -38,4 +40,6 @@ func loadComponent() {
 	mysql.Init(web.Config.Db)
 	redis.Init(web.Config.Redis)
 	cache.InitRedisCache(redis.Client)
+	rocketmq.InitProducer(web.Config.RocketMq)
+	rocketmq.InitConsumer(web.Config.RocketMq)
 }

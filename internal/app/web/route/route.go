@@ -17,4 +17,6 @@ func InitRoute(e *gin.Engine) {
 	e.GET("/", handler.Index)
 	e.GET("/p", handler.Painc)
 	e.GET("/user/:id", user.Index)
+
+	e.GET("/send_mq", handler.SendMq)
 }

@@ -2,3 +2,9 @@
 id = "GinTpl3"
 port = 9000
 mode = "debug"
+
+[rocket_mq]
+endpoint = "127.0.0.1:8081"
+access_key = ""
+secret_key = ""
+producer_topic = "test1"

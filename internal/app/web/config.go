@@ -8,9 +8,10 @@ import (
 var Config = &configType{}
 
 type configType struct {
-	App   *config.App   `mapstructure:"app"`
-	Db    *config.DB    `mapstructure:"db"`
-	Redis *config.Redis `mapstructure:"redis"`
+	App      *config.App      `mapstructure:"app"`
+	Db       *config.DB       `mapstructure:"db"`
+	Redis    *config.Redis    `mapstructure:"redis"`
+	RocketMq *config.RocketMq `mapstructure:"rocket_mq"`
 }
 
 func init() {
