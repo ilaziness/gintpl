@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding"
 	"encoding/json"
+	"testing"
+
 	"gintpl/pkg/config"
 	"gintpl/pkg/storage/redis"
-	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -35,7 +36,7 @@ func init() {
 	InitRedisCache(redis.Client)
 }
 
-func TestMain(t *testing.T) {
+func TestFn(t *testing.T) {
 	ctx := context.Background()
 	ttl := 5
 
@@ -82,7 +83,7 @@ func TestCache(t *testing.T) {
 	err := Set(ctx, k1, v1, ttl)
 	assert.Equal(t, err, nil, "set return error")
 	var v1s string
-	GetScan(ctx, k1, &v1s)
+	_ = GetScan(ctx, k1, &v1s)
 	assert.Equal(t, v1, v1s)
 
 	k2 := "k2"
@@ -90,14 +91,14 @@ func TestCache(t *testing.T) {
 	err = Set(ctx, k2, v2, ttl)
 	assert.Equal(t, err, nil, "set return error")
 	var v2s int
-	GetScan(ctx, k2, &v2s)
+	_ = GetScan(ctx, k2, &v2s)
 	assert.Equal(t, v2, v2s)
 
 	k3 := "k3"
 	v3 := &tests{"namek3", 15}
 	assert.Equal(t, Set(ctx, k3, v3, ttl), nil, "set return error")
 	v3s := &tests{}
-	GetScan(ctx, k3, v3s)
+	_ = GetScan(ctx, k3, v3s)
 	assert.Equal(t, v3, v3s)
 
 	k4 := "k4"

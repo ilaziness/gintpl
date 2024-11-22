@@ -13,7 +13,7 @@ func Index(c *gin.Context) {
 	response.Success(c, gin.H{"status": "index page"})
 }
 
-func Painc(c *gin.Context) {
+func Painc(_ *gin.Context) {
 	panic("1234")
 }
 

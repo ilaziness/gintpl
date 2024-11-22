@@ -29,7 +29,7 @@ func InitProducer(cfg *config.RocketMq) {
 			},
 		}))
 	}
-	os.Setenv("rocketmq.client.logRoot", "log")
+	_ = os.Setenv("rocketmq.client.logRoot", "log")
 	rmq.ResetLogger()
 	producer, err = rmq.NewProducer(&rmq.Config{
 		Endpoint: cfg.Endpoint,
@@ -56,7 +56,9 @@ func ProducerStop() {
 	if !producerStarted {
 		return
 	}
-	producer.GracefulStop()
+	if err := producer.GracefulStop(); err != nil {
+		log.Logger.Errorf("producer graceful stop fail: %v", err)
+	}
 	log.Logger.Info("queue producer stop done")
 }
 

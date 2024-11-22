@@ -60,7 +60,7 @@ func LogReq() gin.HandlerFunc {
 		// Process request
 		c.Next()
 
-		latency := time.Now().Sub(start)
+		latency := time.Since(start)
 		if latency > time.Minute {
 			latency = latency.Truncate(time.Second)
 		}

@@ -29,9 +29,12 @@ func Run() {
 	if len(jobs) == 0 {
 		return
 	}
+	var err error
 	scheduler = cron.New()
 	for _, job := range jobs {
-		scheduler.AddJob(job.GetCron(), job)
+		if _, err = scheduler.AddJob(job.GetCron(), job); err != nil {
+			log.Logger.Warnf("timer add job error, name: %s, err: %v", job.GetName(), err)
+		}
 	}
 	scheduler.Start()
 	running = true
@@ -43,8 +46,7 @@ func Stop() {
 	if !running {
 		return
 	}
-	log.Logger.Infoln("timer stop")
 	ctx := scheduler.Stop()
 	<-ctx.Done()
-	log.Logger.Infoln("timer stop done")
+	log.Logger.Infoln("timer stopped")
 }

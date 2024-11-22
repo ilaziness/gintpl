@@ -167,5 +167,5 @@ func ConsumerStop() {
 	}
 	consumerCtxCancel()
 	time.Sleep(time.Second * 3)
-	log.Logger.Info("queue consumer stop done")
+	log.Logger.Info("queue consumer stopped")
 }
