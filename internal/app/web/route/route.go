@@ -19,4 +19,5 @@ func InitRoute(e *gin.Engine) {
 	e.GET("/user/:id", user.Index)
 
 	e.GET("/send_mq", handler.SendMq)
+	e.GET("/trace_test", handler.Trace)
 }

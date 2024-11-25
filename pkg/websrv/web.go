@@ -13,9 +13,9 @@ import (
 	"gintpl/pkg/config"
 	"gintpl/pkg/log"
 	"gintpl/pkg/middleware"
+	"gintpl/pkg/otel"
 	"gintpl/pkg/queue/rocketmq"
 	"gintpl/pkg/timer"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -30,17 +30,19 @@ func New(appCfg *config.App) *App {
 	if appCfg.Mode == gin.ReleaseMode {
 		gin.SetMode(gin.ReleaseMode)
 	}
-	return &App{
+	a := &App{
 		Gin: NewGin(),
 		cfg: appCfg,
 	}
+	a.setDefaultMiddleware()
+	return a
 }
 
 // NewGin gin engine
 func NewGin() *gin.Engine {
 	e := gin.New()
+	// 没有这个设置gin context和原生content会不兼容
 	e.ContextWithFallback = true
-	e.Use(middleware.LogReq(), gin.CustomRecoveryWithWriter(nil, middleware.RecoveryHandle))
 	return e
 }
 
@@ -69,11 +71,12 @@ func (a *App) Run() {
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Logger.Fatal("Server Shutdown error:", err)
 	}
-	a.stopup()
+	a.destroy()
 	log.Logger.Info("Server exiting")
 }
 
-func (a *App) starup() {
+func (a *App) setDefaultMiddleware() {
+	a.Gin.Use(middleware.LogReq(), gin.CustomRecoveryWithWriter(nil, middleware.RecoveryHandle))
 	corsCfg := cors.DefaultConfig()
 	corsCfg.AllowOrigins = []string{"*"}
 	if a.cfg.Cors != nil {
@@ -89,13 +92,17 @@ func (a *App) starup() {
 		corsCfg.AllowCredentials = a.cfg.Cors.AllowCredentials
 	}
 	a.Gin.Use(cors.New(corsCfg))
+	a.Gin.Use(middleware.Otel(a.cfg.ID))
+}
 
+func (a *App) starup() {
 	timer.Run()
 }
 
-func (a *App) stopup() {
+func (a *App) destroy() {
 	log.FlushLogger()
 	timer.Stop()
 	rocketmq.ProducerStop()
 	rocketmq.ConsumerStop()
+	otel.Shutdown()
 }

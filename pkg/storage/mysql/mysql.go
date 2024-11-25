@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"fmt"
+
 	"gintpl/pkg/config"
 
 	"gorm.io/driver/mysql"
@@ -10,7 +11,7 @@ import (
 
 var DB *gorm.DB
 
-// InitMysql 初始化MySQL连接
+// Init 初始化MySQL连接
 // dns refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
 func Init(cfg *config.DB) {
 	dsn := cfg.DSN

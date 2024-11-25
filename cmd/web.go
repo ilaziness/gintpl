@@ -6,11 +6,12 @@ import (
 	_ "gintpl/internal/queue"
 	_ "gintpl/internal/timer"
 	"gintpl/pkg/log"
-	"gintpl/pkg/queue/rocketmq"
+	"gintpl/pkg/middleware"
 	"gintpl/pkg/storage/cache"
 	"gintpl/pkg/storage/mysql"
 	"gintpl/pkg/storage/redis"
 	"gintpl/pkg/websrv"
+	"github.com/gin-gonic/gin"
 
 	"github.com/spf13/cobra"
 )
@@ -25,21 +26,29 @@ var CmdWeb = &cobra.Command{
 }
 
 func run() {
-	app := websrv.New(web.Config.App)
-	loadComponent()
+	initComponent()
+
+	webServer := websrv.New(web.Config.App)
+	// 设置自定义中间件
+	useMiddleware(webServer.Gin)
 	// 初始化路由
-	route.InitRoute(app.Gin)
+	route.InitRoute(webServer.Gin)
 	// 运行
-	app.Run()
+	webServer.Run()
 }
 
-// loadComponent 初始化需要用到的组件
-func loadComponent() {
+// initComponent 初始化需要用到的组件
+func initComponent() {
 	log.Init() // 必须
 	// 以下按需
 	mysql.Init(web.Config.Db)
 	redis.Init(web.Config.Redis)
 	cache.InitRedisCache(redis.Client)
-	rocketmq.InitProducer(web.Config.RocketMq)
-	rocketmq.InitConsumer(web.Config.RocketMq)
+	//rocketmq.InitProducer(web.Config.RocketMq)
+	//rocketmq.InitConsumer(web.Config.RocketMq)
+	//otel.InitTracer(web.Config.App.ID, web.Config.Otel)
+}
+
+func useMiddleware(g *gin.Engine) {
+	g.Use(middleware.Test())
 }

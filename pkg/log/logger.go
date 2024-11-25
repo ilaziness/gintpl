@@ -8,10 +8,13 @@
 package log
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"os"
 	"time"
 
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -32,10 +35,10 @@ func Init(mode ...string) {
 			logLevel = zapcore.InfoLevel
 		}
 	}
-	SetLogger()
+	setLogger()
 }
 
-func SetLogger() {
+func setLogger() {
 	// 配置日志写入文件
 	fileWriter := zapcore.AddSync(&lumberjack.Logger{
 		Filename:   "log/app.log", // 日志文件名
@@ -89,4 +92,44 @@ func buildEncoderConsoleConfig() zapcore.EncoderConfig {
 	consoleEncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder // 添加颜色
 	consoleEncoderConfig.EncodeCaller = zapcore.ShortCallerEncoder      // 简短的调用者信息
 	return consoleEncoderConfig
+}
+
+// Debug 增加了记录trace id
+func Debug(ctx context.Context, tpl string, args ...interface{}) {
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().HasTraceID() {
+		Logger.Debugw(fmt.Sprintf(tpl, args...), "trace_id", span.SpanContext().TraceID().String())
+		return
+	}
+	Logger.Debugf(tpl, args...)
+}
+
+// Info 增加了记录trace id
+func Info(ctx context.Context, tpl string, args ...interface{}) {
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().HasTraceID() {
+		Logger.Infow(fmt.Sprintf(tpl, args...), "trace_id", span.SpanContext().TraceID().String())
+		return
+	}
+	Logger.Infof(tpl, args...)
+}
+
+// Warn 增加了记录trace id
+func Warn(ctx context.Context, tpl string, args ...interface{}) {
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().HasTraceID() {
+		Logger.Warnw(fmt.Sprintf(tpl, args...), "trace_id", span.SpanContext().TraceID().String())
+		return
+	}
+	Logger.Warnf(tpl, args...)
+}
+
+// Error 增加了记录trace id
+func Error(ctx context.Context, tpl string, args ...interface{}) {
+	span := trace.SpanFromContext(ctx)
+	if span.SpanContext().HasTraceID() {
+		Logger.Errorw(fmt.Sprintf(tpl, args...), "trace_id", span.SpanContext().TraceID().String())
+		return
+	}
+	Logger.Errorf(tpl, args...)
 }

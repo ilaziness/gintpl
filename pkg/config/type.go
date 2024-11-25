@@ -3,6 +3,7 @@ package config
 type Mode string
 
 type App struct {
+	// 应用id
 	ID string `mapstructure:"id"`
 	// Mode debug, release
 	Mode    string `mapstructure:"mode"`
@@ -43,4 +44,9 @@ type RocketMq struct {
 	SecretKey     string `mapstructure:"secret_key"`
 	Transaction   bool   `mapstructure:"transaction"`
 	ProducerTopic string `mapstructure:"producer_topic"`
+}
+
+// Otel opentelemetry配置
+type Otel struct {
+	TraceExporterURL string `mapstructure:"trace_exporter_url"`
 }
