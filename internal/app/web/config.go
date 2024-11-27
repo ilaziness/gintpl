@@ -14,6 +14,7 @@ type configType struct {
 	Redis    *config.Redis    `mapstructure:"redis"`
 	RocketMq *config.RocketMq `mapstructure:"rocket_mq"`
 	Otel     *config.Otel     `mapstructure:"otel"`
+	Nacos    *config.Nacos    `mapstructure:"nacos"`
 }
 
 func init() {

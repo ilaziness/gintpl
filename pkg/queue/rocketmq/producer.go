@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"gintpl/pkg/config"
+	"gintpl/pkg/hook"
 	"gintpl/pkg/log"
 
 	rmq "github.com/apache/rocketmq-clients/golang/v5"
@@ -48,6 +49,7 @@ func InitProducer(cfg *config.RocketMq) {
 		panic(err)
 	}
 	producerStarted = true
+	hook.Exit.Register(ProducerStop)
 	log.Logger.Info("queue producer create done")
 }
 

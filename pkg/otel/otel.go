@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"gintpl/pkg/config"
+	"gintpl/pkg/hook"
 	"gintpl/pkg/log"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
@@ -45,6 +46,7 @@ func InitTracer(serviceName string, cfg *config.Otel) {
 
 	tracerStarted = true
 	Tracer = otel.Tracer(serviceName)
+	hook.Exit.Register(Shutdown)
 }
 
 func Shutdown() {

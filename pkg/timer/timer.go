@@ -1,6 +1,7 @@
 package timer
 
 import (
+	"gintpl/pkg/hook"
 	"gintpl/pkg/log"
 
 	"github.com/robfig/cron/v3"
@@ -38,6 +39,7 @@ func Run() {
 	}
 	scheduler.Start()
 	running = true
+	hook.Exit.Register(Stop)
 	log.Logger.Infoln("timer started")
 }
 

@@ -26,6 +26,7 @@ var CmdWeb = &cobra.Command{
 }
 
 func run() {
+	// config.InitNacos(web.Config.Nacos, web.Config)
 	initComponent()
 
 	webServer := websrv.New(web.Config.App)

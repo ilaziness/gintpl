@@ -11,10 +11,9 @@ import (
 	"time"
 
 	"gintpl/pkg/config"
+	"gintpl/pkg/hook"
 	"gintpl/pkg/log"
 	"gintpl/pkg/middleware"
-	"gintpl/pkg/otel"
-	"gintpl/pkg/queue/rocketmq"
 	"gintpl/pkg/timer"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -100,9 +99,5 @@ func (a *App) starup() {
 }
 
 func (a *App) destroy() {
-	log.FlushLogger()
-	timer.Stop()
-	rocketmq.ProducerStop()
-	rocketmq.ConsumerStop()
-	otel.Shutdown()
+	hook.Exit.Trigger()
 }

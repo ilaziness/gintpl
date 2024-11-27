@@ -14,6 +14,7 @@ import (
 	"os"
 	"time"
 
+	"gintpl/pkg/hook"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -36,6 +37,8 @@ func Init(mode ...string) {
 		}
 	}
 	setLogger()
+
+	hook.Exit.Register(FlushLogger)
 }
 
 func setLogger() {

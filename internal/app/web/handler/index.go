@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"gintpl/internal/app/web"
 	"gintpl/pkg/base/response"
 	"gintpl/pkg/log"
 	"gintpl/pkg/otel"
@@ -11,6 +12,10 @@ import (
 
 // Index 首页
 func Index(c *gin.Context) {
+	log.Warn(c, "%+v", web.Config.App)
+	log.Info(c, "%+v", web.Config.App)
+	log.Debug(c, "%+v", web.Config.App)
+	log.Error(c, "%+v", web.Config.App)
 	response.Success(c, gin.H{"status": "index page"})
 }
 

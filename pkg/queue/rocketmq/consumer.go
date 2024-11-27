@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"gintpl/pkg/config"
+	"gintpl/pkg/hook"
 	"gintpl/pkg/log"
 	"gintpl/pkg/utils"
 	"golang.org/x/sync/semaphore"
@@ -63,6 +64,7 @@ func InitConsumer(cfg *config.RocketMq) {
 		})
 	}
 	consumerStarted = true
+	hook.Exit.Register(ConsumerStop)
 }
 
 // StartConsumer 启动消费者

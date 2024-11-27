@@ -50,3 +50,26 @@ type RocketMq struct {
 type Otel struct {
 	TraceExporterURL string `mapstructure:"trace_exporter_url"`
 }
+
+type NacosClient struct {
+	NamespaceID         string `mapstructure:"namespace_id"`
+	AccessKey           string `mapstructure:"access_key"`
+	SecretKey           string `mapstructure:"secret_key"`
+	Username            string `mapstructure:"username"`
+	Password            string `mapstructure:"password"`
+	NotLoadCacheAtStart bool   `mapstructure:"not_load_cache_at_start"`
+	LogLevel            string `mapstructure:"log_level"`
+}
+
+type NacosServer struct {
+	IP   string `mapstructure:"ip"`
+	Port uint16 `mapstructure:"port"`
+}
+
+// Nacos 配置
+type Nacos struct {
+	DataID string        `mapstructure:"data_id"`
+	Group  string        `mapstructure:"group"`
+	Client NacosClient   `mapstructure:"client"`
+	Server []NacosServer `mapstructure:"server"`
+}
