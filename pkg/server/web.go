@@ -1,5 +1,5 @@
-// Package websrv provide web engine
-package websrv
+// Package server provide web engine
+package server
 
 import (
 	"context"
@@ -19,17 +19,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type App struct {
+type WebApp struct {
 	Gin *gin.Engine
 	cfg *config.App
 }
 
-// New 创建一个web app
-func New(appCfg *config.App) *App {
+// NewWeb 创建一个web app
+func NewWeb(appCfg *config.App) *WebApp {
 	if appCfg.Mode == gin.ReleaseMode {
 		gin.SetMode(gin.ReleaseMode)
 	}
-	a := &App{
+	a := &WebApp{
 		Gin: NewGin(),
 		cfg: appCfg,
 	}
@@ -46,7 +46,7 @@ func NewGin() *gin.Engine {
 }
 
 // Run 运行应用
-func (a *App) Run() {
+func (a *WebApp) Run() {
 	a.starup()
 	srv := http.Server{
 		Addr:    fmt.Sprintf(":%d", a.cfg.Port),
@@ -74,7 +74,7 @@ func (a *App) Run() {
 	log.Logger.Info("Server exiting")
 }
 
-func (a *App) setDefaultMiddleware() {
+func (a *WebApp) setDefaultMiddleware() {
 	a.Gin.Use(middleware.LogReq(), gin.CustomRecoveryWithWriter(nil, middleware.RecoveryHandle))
 	corsCfg := cors.DefaultConfig()
 	corsCfg.AllowOrigins = []string{"*"}
@@ -94,10 +94,10 @@ func (a *App) setDefaultMiddleware() {
 	a.Gin.Use(middleware.Otel(a.cfg.ID))
 }
 
-func (a *App) starup() {
+func (a *WebApp) starup() {
 	timer.Run()
 }
 
-func (a *App) destroy() {
+func (a *WebApp) destroy() {
 	hook.Exit.Trigger()
 }

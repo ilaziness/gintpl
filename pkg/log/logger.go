@@ -27,7 +27,7 @@ var (
 	logLevel  = zapcore.DebugLevel
 )
 
-func Init(mode ...string) {
+func SetLevel(mode ...string) {
 	if len(mode) > 0 {
 		switch mode[0] {
 		case "debug":
@@ -36,6 +36,9 @@ func Init(mode ...string) {
 			logLevel = zapcore.InfoLevel
 		}
 	}
+}
+
+func init() {
 	setLogger()
 
 	hook.Exit.Register(FlushLogger)

@@ -2,9 +2,9 @@ package config
 
 import (
 	"bytes"
-	"log"
 
 	"gintpl/pkg/hook"
+	"gintpl/pkg/log"
 	"github.com/jinzhu/copier"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients/config_client"
@@ -65,7 +65,7 @@ func (nc *nacosConfigType[T]) get() {
 	if err != nil {
 		panic(err)
 	}
-	nc.loadConfigNacos(content)
+	nc.readConfig(content)
 
 	// 监听配置变化
 	err = nc.nacosConfigClient.ListenConfig(vo.ConfigParam{
@@ -79,11 +79,11 @@ func (nc *nacosConfigType[T]) get() {
 }
 
 func (nc *nacosConfigType[T]) onChange(namespace, group, dataID, data string) {
-	log.Println("nacos config changed:", namespace, group, dataID)
-	nc.loadConfigNacos(data)
+	log.Logger.Infof("nacos config changed: %s %s %s", namespace, group, dataID)
+	nc.readConfig(data)
 }
 
-func (nc *nacosConfigType[T]) loadConfigNacos(cfgData string) {
+func (nc *nacosConfigType[T]) readConfig(cfgData string) {
 	var err error
 	viper.SetConfigType(defaultType)
 	if err = viper.ReadConfig(bytes.NewBufferString(cfgData)); err != nil {
@@ -102,7 +102,7 @@ func (nc *nacosConfigType[T]) cancelListen() {
 			Group:  nc.group,
 		})
 		if err != nil {
-			log.Println(err)
+			log.Logger.Warnf("cancelListen: %v", err)
 		}
 	})
 }

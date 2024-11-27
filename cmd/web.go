@@ -7,10 +7,10 @@ import (
 	_ "gintpl/internal/timer"
 	"gintpl/pkg/log"
 	"gintpl/pkg/middleware"
+	"gintpl/pkg/server"
 	"gintpl/pkg/storage/cache"
 	"gintpl/pkg/storage/mysql"
 	"gintpl/pkg/storage/redis"
-	"gintpl/pkg/websrv"
 	"github.com/gin-gonic/gin"
 
 	"github.com/spf13/cobra"
@@ -27,9 +27,10 @@ var CmdWeb = &cobra.Command{
 
 func run() {
 	// config.InitNacos(web.Config.Nacos, web.Config)
+	log.SetLevel(web.Config.App.Mode)
 	initComponent()
 
-	webServer := websrv.New(web.Config.App)
+	webServer := server.NewWeb(web.Config.App)
 	// 设置自定义中间件
 	useMiddleware(webServer.Gin)
 	// 初始化路由
@@ -40,14 +41,12 @@ func run() {
 
 // initComponent 初始化需要用到的组件
 func initComponent() {
-	log.Init() // 必须
-	// 以下按需
 	mysql.Init(web.Config.Db)
 	redis.Init(web.Config.Redis)
 	cache.InitRedisCache(redis.Client)
-	//rocketmq.InitProducer(web.Config.RocketMq)
-	//rocketmq.InitConsumer(web.Config.RocketMq)
-	//otel.InitTracer(web.Config.App.ID, web.Config.Otel)
+	// rocketmq.InitProducer(web.Config.RocketMq)
+	// rocketmq.InitConsumer(web.Config.RocketMq)
+	// otel.InitTracer(web.Config.WebApp.ID, web.Config.Otel)
 }
 
 func useMiddleware(g *gin.Engine) {
