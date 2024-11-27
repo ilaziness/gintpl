@@ -35,6 +35,8 @@ func run() {
 	useMiddleware(webServer.Gin)
 	// 初始化路由
 	route.InitRoute(webServer.Gin)
+	// 注册服务
+	// server.Register(web.Config.Nacos, web.Config.App)
 	// 运行
 	webServer.Run()
 }

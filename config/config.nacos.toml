@@ -4,6 +4,7 @@ data_id = "web"
 group = "gintpl"
 [nacos.client]
 namespace_id = "e4b98b9b-a0d0-402b-b282-602b6c2fa3ca"
+not_load_cache_at_start = true
 [nacos.server]
 ip = "127.0.0.1"
 port = 8848

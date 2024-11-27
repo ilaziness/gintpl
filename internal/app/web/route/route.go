@@ -20,4 +20,5 @@ func InitRoute(e *gin.Engine) {
 
 	e.GET("/send_mq", handler.SendMq)
 	e.GET("/trace_test", handler.Trace)
+	e.GET("/ser_dis", handler.ServiceDis)
 }

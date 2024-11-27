@@ -6,7 +6,7 @@ import (
 	"gintpl/pkg/log"
 	"gintpl/pkg/otel"
 	"gintpl/pkg/queue/rocketmq"
-
+	"gintpl/pkg/server"
 	"github.com/gin-gonic/gin"
 )
 
@@ -43,4 +43,10 @@ func Trace(c *gin.Context) {
 	log.Warn(ctx, "hello")
 
 	response.Success(c, gin.H{"text": "Trace demo"})
+}
+
+func ServiceDis(c *gin.Context) {
+	ip, err := server.GetInstance("GinTpl3")
+	log.Info(c, "ServiceDis: %v - %v", ip, err)
+	response.Success(c, gin.H{"status": "service dis"})
 }

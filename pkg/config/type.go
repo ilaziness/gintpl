@@ -5,6 +5,8 @@ type Mode string
 type App struct {
 	// 应用id
 	ID string `mapstructure:"id"`
+	// 服务权重
+	Weight int `mapstructure:"weight"`
 	// Mode debug, release
 	Mode    string `mapstructure:"mode"`
 	Port    uint16 `mapstructure:"port"`
