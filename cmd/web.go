@@ -1,18 +1,17 @@
 package main
 
 import (
-	"gintpl/internal/app/web"
-	"gintpl/internal/app/web/route"
-	_ "gintpl/internal/queue"
-	_ "gintpl/internal/timer"
-	"gintpl/pkg/log"
-	"gintpl/pkg/middleware"
-	"gintpl/pkg/server"
-	"gintpl/pkg/storage/cache"
-	"gintpl/pkg/storage/mysql"
-	"gintpl/pkg/storage/redis"
 	"github.com/gin-gonic/gin"
-
+	"github.com/ilaziness/gintpl/internal/app/web"
+	"github.com/ilaziness/gintpl/internal/app/web/route"
+	"github.com/ilaziness/gintpl/internal/dao"
+	"github.com/ilaziness/gintpl/internal/ent"
+	_ "github.com/ilaziness/gintpl/internal/queue"
+	_ "github.com/ilaziness/gintpl/internal/timer"
+	"github.com/ilaziness/gokit/log"
+	"github.com/ilaziness/gokit/middleware"
+	"github.com/ilaziness/gokit/server"
+	"github.com/ilaziness/gokit/storage/mysql"
 	"github.com/spf13/cobra"
 )
 
@@ -43,9 +42,13 @@ func run() {
 
 // initComponent 初始化需要用到的组件
 func initComponent() {
-	mysql.Init(web.Config.Db)
-	redis.Init(web.Config.Redis)
-	cache.InitRedisCache(redis.Client)
+	// gormCmd
+	// mysql.InitGORM(web.Config.Db)
+	// ent
+	dao.SetClient(ent.NewClient(ent.Driver(mysql.EntDriver(web.Config.Db))))
+
+	//redis.Init(web.Config.Redis)
+	//cache.InitRedisCache(redis.Client)
 	// rocketmq.InitProducer(web.Config.RocketMq)
 	// rocketmq.InitConsumer(web.Config.RocketMq)
 	// otel.InitTracer(web.Config.WebApp.ID, web.Config.Otel)

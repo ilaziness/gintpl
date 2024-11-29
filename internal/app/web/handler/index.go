@@ -1,13 +1,16 @@
 package handler
 
 import (
-	"gintpl/internal/app/web"
-	"gintpl/pkg/base/response"
-	"gintpl/pkg/log"
-	"gintpl/pkg/otel"
-	"gintpl/pkg/queue/rocketmq"
-	"gintpl/pkg/server"
 	"github.com/gin-gonic/gin"
+	"github.com/ilaziness/gintpl/internal/app/web"
+	"github.com/ilaziness/gintpl/internal/dao"
+	"github.com/ilaziness/gintpl/internal/ent"
+	"github.com/ilaziness/gintpl/internal/errcode"
+	"github.com/ilaziness/gokit/base/response"
+	"github.com/ilaziness/gokit/log"
+	"github.com/ilaziness/gokit/otel"
+	"github.com/ilaziness/gokit/queue/rocketmq"
+	"github.com/ilaziness/gokit/server"
 )
 
 // Index 首页
@@ -49,4 +52,18 @@ func ServiceDis(c *gin.Context) {
 	ip, err := server.GetInstance("GinTpl3")
 	log.Info(c, "ServiceDis: %v - %v", ip, err)
 	response.Success(c, gin.H{"status": "service dis"})
+}
+
+func TestEnt(c *gin.Context) {
+	err := dao.User.Create(c, &ent.User{
+		Age:      18,
+		Name:     c.Query("name"),
+		Username: c.Query("username"),
+	})
+
+	if err != nil {
+		response.Error(c, errcode.CodeDBCreateFailed)
+		return
+	}
+	response.Success(c, nil)
 }

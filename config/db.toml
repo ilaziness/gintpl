@@ -1,5 +1,5 @@
 [db]
-dsn = "root:root@tcp(127.0.0.1:3306)/hotgo"
+dsn = "root:root@tcp(127.0.0.1:3306)/ent_test"
 
 [redis]
 host = "127.0.0.1"

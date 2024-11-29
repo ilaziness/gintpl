@@ -7,8 +7,8 @@
 package route
 
 import (
-	"gintpl/internal/app/web/handler"
-	"gintpl/internal/app/web/handler/user"
+	"github.com/ilaziness/gintpl/internal/app/web/handler"
+	"github.com/ilaziness/gintpl/internal/app/web/handler/user"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,4 +21,5 @@ func InitRoute(e *gin.Engine) {
 	e.GET("/send_mq", handler.SendMq)
 	e.GET("/trace_test", handler.Trace)
 	e.GET("/ser_dis", handler.ServiceDis)
+	e.GET("/test_ent", handler.TestEnt)
 }

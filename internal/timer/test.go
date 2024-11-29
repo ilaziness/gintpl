@@ -1,7 +1,7 @@
 package timer
 
 import (
-	"gintpl/pkg/timer"
+	"github.com/ilaziness/gokit/timer"
 
 	"log"
 )

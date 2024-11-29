@@ -1,7 +1,7 @@
 package user
 
 import (
-	"gintpl/pkg/base/response"
+	"github.com/ilaziness/gokit/base/response"
 
 	"github.com/gin-gonic/gin"
 )

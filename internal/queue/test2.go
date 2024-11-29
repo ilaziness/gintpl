@@ -3,7 +3,7 @@ package queue
 import (
 	"log"
 
-	"gintpl/pkg/queue/rocketmq"
+	"github.com/ilaziness/gokit/queue/rocketmq"
 
 	rmq "github.com/apache/rocketmq-clients/golang/v5"
 )

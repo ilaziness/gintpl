@@ -6,11 +6,15 @@
 
 package errcode
 
-import "gintpl/pkg/base/errcode"
+import (
+	"github.com/ilaziness/gokit/base/errcode"
+)
 
 // 错误码定义
 
 var (
 	CodeNil      = errcode.NewCode(0, "ok")
 	CodeNotFound = errcode.NewCode(404, "Not Found")
+
+	CodeDBCreateFailed = errcode.NewCode(500, "DB Create Failed")
 )

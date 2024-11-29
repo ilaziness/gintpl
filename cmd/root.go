@@ -18,7 +18,7 @@ to quickly create a Cobra application.`,
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	rootCmd.AddCommand(CmdWeb)
+	rootCmd.AddCommand(CmdWeb, gormCmd)
 }
 
 func main() {
