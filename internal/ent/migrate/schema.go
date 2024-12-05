@@ -24,7 +24,7 @@ var (
 		{Name: "age", Type: field.TypeInt},
 		{Name: "name", Type: field.TypeString},
 		{Name: "username", Type: field.TypeString, Unique: true},
-		{Name: "created_at", Type: field.TypeTime},
+		{Name: "created_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "datetime"}},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{

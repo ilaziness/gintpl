@@ -57,7 +57,7 @@ if err := client.Schema.Create(ctx); err != nil {
 
 ## 4. 查询
 
-先创建第2步生成的`Client`对象，在用`Client`执行对数据库的CRUD：
+使用第2步生成的`Client`对象，在用`Client`执行对数据库的CRUD：
 
 ```go
 package main

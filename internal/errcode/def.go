@@ -16,5 +16,6 @@ var (
 	CodeNil      = errcode.NewCode(0, "ok")
 	CodeNotFound = errcode.NewCode(404, "Not Found")
 
+	CodeReqErr         = errcode.NewCode(400, "Request Error")
 	CodeDBCreateFailed = errcode.NewCode(500, "DB Create Failed")
 )

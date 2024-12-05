@@ -22,7 +22,13 @@ func SetClient(c *ent.Client) {
 
 // AutoMigration 自动迁移
 func AutoMigration() {
-	if err := client.Schema.Create(context.Background(), migrate.WithForeignKeys(false)); err != nil {
+	err := client.Schema.Create(
+		context.Background(),
+		migrate.WithForeignKeys(false),
+		migrate.WithDropIndex(true),
+		migrate.WithDropColumn(true),
+	)
+	if err != nil {
 		log.Logger.Errorf("failed creating schema resources: %v", err)
 	}
 }

@@ -25,8 +25,13 @@ var CmdWeb = &cobra.Command{
 }
 
 func run() {
+	// 初始化nacos配置中心
 	// config.InitNacos(web.Config.Nacos, web.Config)
+
+	// 设置运行模式
 	log.SetLevel(web.Config.App.Mode)
+
+	// 载入所需组件
 	initComponent()
 
 	webServer := server.NewWeb(web.Config.App)
@@ -34,9 +39,10 @@ func run() {
 	useMiddleware(webServer.Gin)
 	// 初始化路由
 	route.InitRoute(webServer.Gin)
-	// 注册服务
+	// nancos注册服务
 	// server.Register(web.Config.Nacos, web.Config.App)
-	// 运行
+
+	// 运行服务
 	webServer.Run()
 }
 
@@ -44,13 +50,27 @@ func run() {
 func initComponent() {
 	// gormCmd
 	// mysql.InitGORM(web.Config.Db)
+
 	// ent
 	dao.SetClient(ent.NewClient(ent.Driver(mysql.EntDriver(web.Config.Db))))
+	dao.AutoMigration()
 
+	// sqlx
+	//mysql.InitSqlx(web.Config.Db)
+
+	// 初始化redis
 	//redis.Init(web.Config.Redis)
+
+	// 初始化redis 缓存功能
 	//cache.InitRedisCache(redis.Client)
+
+	// 启用rocketmq 生产者
 	// rocketmq.InitProducer(web.Config.RocketMq)
+
+	// 启用rocketmq 消费者
 	// rocketmq.InitConsumer(web.Config.RocketMq)
+
+	// 开启链路追踪
 	// otel.InitTracer(web.Config.WebApp.ID, web.Config.Otel)
 }
 

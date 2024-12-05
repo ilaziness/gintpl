@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 )
 
@@ -20,6 +21,9 @@ func (User) Fields() []ent.Field {
 		field.String("username").
 			Unique(),
 		field.Time("created_at").
+			SchemaType(map[string]string{
+				dialect.MySQL: "datetime",
+			}).
 			Default(time.Now),
 	}
 }

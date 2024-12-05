@@ -11,14 +11,14 @@ import (
 
 var gormCmd = &cobra.Command{
 	Use:   "gorm",
-	Short: "gorm generate tool",
-	Long:  `execute gorm generate tool`,
+	Short: "gorm generator tool",
+	Long:  `execute gorm generator tool`,
 }
 
 var gormDAOCmd = &cobra.Command{
 	Use:   "dao",
-	Short: "generate dao query and model code from database",
-	Long: `generate dao query and model code from database. For example:
+	Short: "generator dao query and model code from database",
+	Long: `generator dao query and model code from database. For example:
 
 go run ./cmd gorm dao -o ./internal/query
 

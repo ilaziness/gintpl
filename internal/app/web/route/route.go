@@ -16,10 +16,13 @@ import (
 func InitRoute(e *gin.Engine) {
 	e.GET("/", handler.Index)
 	e.GET("/p", handler.Painc)
-	e.GET("/user/:id", user.Index)
+	e.GET("/user", user.Index)
 
 	e.GET("/send_mq", handler.SendMq)
 	e.GET("/trace_test", handler.Trace)
 	e.GET("/ser_dis", handler.ServiceDis)
 	e.GET("/test_ent", handler.TestEnt)
+
+	e.POST("/user", user.Create)
+	e.GET("/user/:id", user.Get)
 }
