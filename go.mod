@@ -6,7 +6,7 @@ require (
 	entgo.io/ent v0.14.1
 	github.com/apache/rocketmq-clients/golang/v5 v5.1.1-rc1
 	github.com/gin-gonic/gin v1.10.0
-	github.com/ilaziness/gokit v0.0.5
+	github.com/ilaziness/gokit v0.1.0
 	github.com/spf13/cobra v1.8.1
 	gorm.io/gen v0.3.26
 )

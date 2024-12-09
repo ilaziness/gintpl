@@ -32,7 +32,8 @@ func Create(c *gin.Context) {
 func Get(c *gin.Context) {
 	req := api.UserGetReq{}
 	if err := c.ShouldBindUri(&req); err != nil {
-		reqp.Error(c, errcode.CodeReqErr.SetMessage(err.Error()))
+		errDesc := err.Error()
+		reqp.Error(c, errcode.CodeReqErr.SetMessage(errDesc))
 		return
 	}
 	rsp, err := service.User.Get(c, &req)

@@ -76,8 +76,16 @@ func TestEnt(c *gin.Context) {
 		return
 	}
 
+	//u := User{}
+	//err = mysql.SqlxDB().Get(&u, "SELECT * FROM users LIMIT 1")
+	//log.Info(c, "User: %v - %v", u, err)
+
+	reqp.Success(c, nil)
+}
+
+func TestGorm(c *gin.Context) {
 	u := User{}
-	err = mysql.SqlxDB().Get(&u, "SELECT * FROM users LIMIT 1")
+	err := mysql.GormDB().WithContext(c).Table("users").First(&u).Error
 	log.Info(c, "User: %v - %v", u, err)
 
 	reqp.Success(c, nil)

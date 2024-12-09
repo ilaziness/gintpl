@@ -22,6 +22,7 @@ func InitRoute(e *gin.Engine) {
 	e.GET("/trace_test", handler.Trace)
 	e.GET("/ser_dis", handler.ServiceDis)
 	e.GET("/test_ent", handler.TestEnt)
+	e.GET("/test_gorm", handler.TestGorm)
 
 	e.POST("/user", user.Create)
 	e.GET("/user/:id", user.Get)

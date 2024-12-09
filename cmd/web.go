@@ -9,7 +9,6 @@ import (
 	_ "github.com/ilaziness/gintpl/internal/queue"
 	_ "github.com/ilaziness/gintpl/internal/timer"
 	"github.com/ilaziness/gokit/log"
-	"github.com/ilaziness/gokit/middleware"
 	"github.com/ilaziness/gokit/server"
 	"github.com/ilaziness/gokit/storage/mysql"
 	"github.com/spf13/cobra"
@@ -49,7 +48,7 @@ func run() {
 // initComponent 初始化需要用到的组件
 func initComponent() {
 	// gormCmd
-	// mysql.InitGORM(web.Config.Db)
+	mysql.InitGORM(web.Config.Db)
 
 	// ent
 	dao.SetClient(ent.NewClient(ent.Driver(mysql.EntDriver(web.Config.Db))))
@@ -74,6 +73,6 @@ func initComponent() {
 	// otel.InitTracer(web.Config.WebApp.ID, web.Config.Otel)
 }
 
-func useMiddleware(g *gin.Engine) {
-	g.Use(middleware.Test())
+func useMiddleware(_ *gin.Engine) {
+	// g.Use(middleware.Test())
 }

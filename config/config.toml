@@ -1,5 +1,5 @@
 [app]
-id = "GinTpl3"
+name = "GinTpl3"
 port = 9000
 mode = "debug"
 
