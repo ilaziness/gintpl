@@ -2,15 +2,16 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/ilaziness/gintpl/internal/app/web"
-	"github.com/ilaziness/gintpl/internal/app/web/route"
-	"github.com/ilaziness/gintpl/internal/dao"
-	"github.com/ilaziness/gintpl/internal/ent"
-	_ "github.com/ilaziness/gintpl/internal/queue"
-	_ "github.com/ilaziness/gintpl/internal/timer"
+	_ "github.com/go-sql-driver/mysql" //ent mysql driver
+	"github.com/ilaziness/gintpl/app/web"
+	"github.com/ilaziness/gintpl/app/web/route"
+	"github.com/ilaziness/gintpl/db"
+	_ "github.com/ilaziness/gintpl/queue"
+	_ "github.com/ilaziness/gintpl/timer"
 	"github.com/ilaziness/gokit/log"
 	"github.com/ilaziness/gokit/server"
-	"github.com/ilaziness/gokit/storage/mysql"
+	"github.com/ilaziness/gokit/storage/sql"
+	// _ "github.com/lib/pq" // ent pg driver
 	"github.com/spf13/cobra"
 )
 
@@ -48,14 +49,13 @@ func run() {
 // initComponent 初始化需要用到的组件
 func initComponent() {
 	// gormCmd
-	mysql.InitGORM(web.Config.Db)
+	// sql.InitGORM(web.Config.Db)
 
 	// ent
-	dao.SetClient(ent.NewClient(ent.Driver(mysql.EntDriver(web.Config.Db))))
-	dao.AutoMigration()
+	db.SetClient(sql.EntDriver(web.Config.Db), web.Config.Db.Debug)
 
 	// sqlx
-	//mysql.InitSqlx(web.Config.Db)
+	//sql.InitSqlx(web.Config.Db)
 
 	// 初始化redis
 	//redis.Init(web.Config.Redis)

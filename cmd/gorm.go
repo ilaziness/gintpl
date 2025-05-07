@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/ilaziness/gintpl/internal/app/web"
-	"github.com/ilaziness/gokit/storage/mysql"
+	"github.com/ilaziness/gintpl/app/web"
+	"github.com/ilaziness/gokit/storage/sql"
 	"github.com/spf13/cobra"
 	"gorm.io/gen"
 )
@@ -26,7 +26,7 @@ Inside the directory internal, a query directory and a model directory will be g
 which will respectively store the generated query code and model code `,
 	Run: func(cmd *cobra.Command, _ []string) {
 		op, _ := cmd.Flags().GetString("out_path")
-		mysql.GenerateDAO(web.Config.Db, op, func(g *gen.Generator) {
+		sql.GenerateDAO(web.Config.Db, op, func(g *gen.Generator) {
 			// 自定义对应模型
 			g.ApplyBasic(g.GenerateAllTable()...)
 		})

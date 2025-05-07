@@ -2,6 +2,8 @@
 name = "GinTpl3"
 port = 9000
 mode = "debug"
+log_req = true
+pprof = false
 
 [rocket_mq]
 endpoint = "127.0.0.1:8081"
