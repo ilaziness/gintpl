@@ -12,7 +12,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	rootCmd.AddCommand(CmdWeb, gormCmd)
+	rootCmd.AddCommand(CmdWeb, gormCmd, tcpCmd)
 }
 
 func main() {

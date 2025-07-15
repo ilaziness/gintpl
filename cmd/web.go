@@ -70,7 +70,7 @@ func initComponent() {
 	// rocketmq.InitConsumer(web.Config.RocketMq)
 
 	// 开启链路追踪
-	// otel.InitTracer(web.Config.WebApp.ID, web.Config.Otel)
+	// otel.InitTracer(web.Config.App.Name, web.Config.Otel)
 }
 
 func useMiddleware(_ *gin.Engine) {

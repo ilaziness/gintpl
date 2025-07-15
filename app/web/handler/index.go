@@ -6,7 +6,7 @@ import (
 	"github.com/ilaziness/gintpl/db/dao"
 	"github.com/ilaziness/gintpl/db/ent"
 	"github.com/ilaziness/gintpl/errcode"
-	"github.com/ilaziness/gokit/base/reqp"
+	"github.com/ilaziness/gokit/base/reqres"
 	"github.com/ilaziness/gokit/log"
 	"github.com/ilaziness/gokit/otel"
 	"github.com/ilaziness/gokit/queue/rocketmq"
@@ -16,7 +16,7 @@ import (
 
 // Index 首页
 func Index(c *gin.Context) {
-	reqp.Success(c, gin.H{"status": "ok"})
+	reqres.Success(c, gin.H{"status": "ok"})
 }
 
 func Painc(_ *gin.Context) {
@@ -29,7 +29,7 @@ func LogTest(c *gin.Context) {
 	log.Debug(c, "%+v", web.Config.App)
 	log.Error(c, "%+v", web.Config.App)
 
-	reqp.Success(c, "log test")
+	reqres.Success(c, "log test")
 }
 
 func SendMq(c *gin.Context) {
@@ -40,7 +40,7 @@ func SendMq(c *gin.Context) {
 	log.Logger.Info("send mq ", rocketmq.Send(c, "test2", []byte("测试数据2")))
 	log.Logger.Info("send mq ", rocketmq.Send(c, "test2", []byte("测试数据3")))
 	log.Logger.Info("send mq ", rocketmq.Send(c, "test2", []byte("测试数据4")))
-	reqp.Success(c, gin.H{"status": "send mq"})
+	reqres.Success(c, gin.H{"status": "send mq"})
 }
 
 func Trace(c *gin.Context) {
@@ -51,13 +51,13 @@ func Trace(c *gin.Context) {
 
 	log.Warn(ctx, "hello")
 
-	reqp.Success(c, gin.H{"text": "Trace demo"})
+	reqres.Success(c, gin.H{"text": "Trace demo"})
 }
 
 func ServiceDis(c *gin.Context) {
 	ip, err := server.GetInstance("GinTpl3")
 	log.Info(c, "ServiceDis: %v - %v", ip, err)
-	reqp.Success(c, gin.H{"status": "service dis"})
+	reqres.Success(c, gin.H{"status": "service dis"})
 }
 
 type User struct {
@@ -77,7 +77,7 @@ func TestEnt(c *gin.Context) {
 
 	if err != nil {
 		log.Error(c, "%v", err)
-		reqp.Error(c, errcode.CodeDBCreateFailed)
+		reqres.Error(c, errcode.CodeDBCreateFailed)
 		return
 	}
 
@@ -85,7 +85,7 @@ func TestEnt(c *gin.Context) {
 	//err = mysql.SqlxDB().Get(&u, "SELECT * FROM users LIMIT 1")
 	//log.Info(c, "User: %v - %v", u, err)
 
-	reqp.Success(c, nil)
+	reqres.Success(c, nil)
 }
 
 func TestGorm(c *gin.Context) {
@@ -93,5 +93,5 @@ func TestGorm(c *gin.Context) {
 	err := sql.GormDB().WithContext(c).Table("users").First(&u).Error
 	log.Info(c, "User: %v - %v", u, err)
 
-	reqp.Success(c, nil)
+	reqres.Success(c, nil)
 }
